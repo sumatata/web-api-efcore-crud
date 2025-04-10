@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 // DO NOT FORGET TO UNCOMMENT THIS LINE
