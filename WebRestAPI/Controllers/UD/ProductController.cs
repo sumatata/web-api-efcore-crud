@@ -8,13 +8,12 @@ namespace WebRestAPI.Controllers.UD;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CustomerController : ControllerBase, iController<Customer>
+public class ProductController : ControllerBase, iController<Product>
 {
     private WebRestOracleContext _context;
-    // Create a field to store the mapper object
     private readonly IMapper _mapper;
 
-    public CustomerController(WebRestOracleContext context, IMapper mapper)
+    public ProductController(WebRestOracleContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
@@ -24,59 +23,46 @@ public class CustomerController : ControllerBase, iController<Customer>
     [Route("Get")]
     public async Task<IActionResult> Get()
     {
-
-        List<Customer> lst = null;
-        lst = await _context.Customers.ToListAsync();
+        List<Product> lst = null;
+        lst = await _context.Product.ToListAsync();
         return Ok(lst);
     }
-
 
     [HttpGet]
     [Route("Get/{ID}")]
     public async Task<IActionResult> Get(string ID)
     {
-        var itm = await _context.Customers.Where(x => x.CustomerId == ID).FirstOrDefaultAsync();
+        var itm = await _context.Product.Where(x => x.ProductId == ID).FirstOrDefaultAsync();
         return Ok(itm);
     }
-
 
     [HttpDelete]
     [Route("Delete/{ID}")]
     public async Task<IActionResult> Delete(string ID)
     {
-        var itm = await _context.Customers.Where(x => x.CustomerId == ID).FirstOrDefaultAsync();
-        _context.Customers.Remove(itm);
+        var itm = await _context.Product.Where(x => x.ProductId == ID).FirstOrDefaultAsync();
+        _context.Product.Remove(itm);
         await _context.SaveChangesAsync();
         return Ok();
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put([FromBody] Customer _Customer)
+    public async Task<IActionResult> Put([FromBody] Product _Product)
     {
         var trans = _context.Database.BeginTransaction();
 
         try
         {
-            var itm = await _context.Customers.AsNoTracking()
-            .Where(x => x.CustomerId == _Customer.CustomerId)
-            .FirstOrDefaultAsync();
-
+            var itm = await _context.Product.AsNoTracking()
+                .Where(x => x.ProductId == _Product.ProductId)
+                .FirstOrDefaultAsync();
 
             if (itm != null)
             {
-                itm = _mapper.Map<Customer>(_Customer);
-
-                 /*
-                        itm.CustomerFirstName = _Customer.CustomerFirstName;
-                        itm.CustomerMiddleName = _Customer.CustomerMiddleName;
-                        itm.CustomerLastName = _Customer.CustomerLastName;
-                        itm.CustomerDateOfBirth = _Customer.CustomerDateOfBirth;
-                        itm.CustomerGenderId = _Customer.CustomerGenderId;
-                   */      
-                _context.Customers.Update(itm);
+                itm = _mapper.Map<Product>(_Product);
+                _context.Product.Update(itm);
                 await _context.SaveChangesAsync();
                 trans.Commit();
-
             }
         }
         catch (Exception ex)
@@ -86,18 +72,17 @@ public class CustomerController : ControllerBase, iController<Customer>
         }
 
         return Ok();
-
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] Customer _Customer)
+    public async Task<IActionResult> Post([FromBody] Product _Product)
     {
         var trans = _context.Database.BeginTransaction();
 
         try
         {
-            _Customer.CustomerId = Guid.NewGuid().ToString().ToUpper().Replace("-", "");
-            _context.Customers.Add(_Customer);
+            _Product.ProductId = Guid.NewGuid().ToString().ToUpper().Replace("-", "");
+            _context.Product.Add(_Product);
             await _context.SaveChangesAsync();
             trans.Commit();
         }
@@ -109,5 +94,4 @@ public class CustomerController : ControllerBase, iController<Customer>
 
         return Ok();
     }
-
 }
