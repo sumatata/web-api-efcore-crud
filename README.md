@@ -43,10 +43,6 @@ Replace products with your actual controller name
 	•	PUT /api/products/{id} – Update an existing item
 	•	DELETE /api/products/{id} – Delete an item
 
-License
-
-This project is licensed under the MIT License.
-
 Author
 
 Suma Tata
