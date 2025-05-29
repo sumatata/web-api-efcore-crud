@@ -21,7 +21,6 @@ This project demonstrates a RESTful Web API built with ASP.NET Core and Entity F
 
 ### 1. Clone the repository
 
-```bash
 git clone https://github.com/sumatata/web-api-efcore-crud.git
 cd web-api-efcore-crud
 
